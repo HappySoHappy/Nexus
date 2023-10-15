@@ -1,0 +1,66 @@
+chat:
+  # If false, all chat packets will be dropped, this includes server messages.
+  # This WILL cause issues with plugins! Here be Dragons.
+  enabled: true
+
+  # If true, chat will be using format specified below instead of using modern formatter.
+  use-format: false
+
+  # Emulates legacy chat formatting, with support for legacy formatting.
+  #
+  # Automatically parses PlaceholderAPI placeholders if its present on the server.
+  # See https://github.com/PlaceholderAPI/PlaceholderAPI/wiki/Placeholders
+  # Internal placeholders available:
+  # - %player%, player's name.
+  # - %message%, Content of the chat message.
+  format: "<%player%> %message%"
+
+  # Chat message format is structured in the following way:
+  # <prefix> <sender> <suffix> <separator> <message>
+  # Note how everything is spaced out, between each tag there will be a space appended.
+  # If tag is empty, it will be excluded from the chat message format
+  # and if it's not present default tag value will be used instead!
+  #
+  # Additional notes:
+  # Placeholders are replaced first, after that mini-message formatting is applied!
+  # Also, legacy formatting codes such as &4 or &l will not be parsed.
+  # Doing things this way allows for better, modern formatting support.
+  # See https://docs.advntr.dev/minimessage/format.html for available formatting.
+  rich-format:
+    # Prefix tag, by default this tag will not appear in the chat message format.
+    # No internal placeholders are available here.
+    prefix: "<#dd00dc>Nexus"
+
+    # Sender tag, pretty self-explanatory - represents whoever sent the message.
+    # Internal placeholders available:
+    # - %player%, senders display name component.
+    sender: "<hover:show_entity:player:%player_uuid%:%player_name%>%player%</hover>"
+
+    # Suffix tag, by default this tag will not appear in the chat message format.
+    # No internal placeholders are available here.
+    suffix: ""
+
+    # Separator tag - as the name suggests separates sender and the message
+    # Note: if for some reason you cannot save unicode characters,
+    # it's possible to use unicode characters like this: \u00BB
+    # No internal placeholders are available here.
+    separator: "<dark_gray><bold>»"
+
+    # Message content is sanitized, if sender doesn't have appropriate
+    # permission to use specific formatting tag it won't be parsed.
+    #
+    # Internal placeholders available:
+    # - %message%, Content of the chat message.
+    message: "%message%"
+
+group-overwrite:
+  owner:
+    chat:
+      rich-format:
+        prefix: "<dark_red>Owner"
+        message: "<red><bold>%message%"
+  admin:
+    chat:
+      rich-format:
+        prefix: "<red>ADMIN"
+        message: "<red>%message%"

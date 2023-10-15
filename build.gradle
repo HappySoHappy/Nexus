@@ -1,0 +1,120 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'kr.entree.spigradle' version '2.4.3'
+    id 'io.freefair.lombok' version '8.0.1'
+    //id 'nebula.release' version '17.2.1'
+}
+
+//apply from: "$rootDir/gradle/publish.gradle"
+
+group project.property("group")
+
+archivesBaseName = project.property("pluginName")
+java.sourceCompatibility = 17
+java.targetCompatibility = 17
+
+spigot {
+    main = project.property("pluginMain")
+    name = project.property("pluginName")
+    apiVersion = project.property("pluginApiVersion")
+    load = project.property("pluginLoad")
+    authors = [project.property("pluginAuthors")]
+    depends = [ ]
+    softDepends = [ "Vault", "ProtocolLib", "PlaceholderAPI" ]
+    loadBefore = [ ]
+    commands {
+        nexus {
+            aliases = ['nx']
+        }
+    }
+    //excludeLibraries = ['*']
+}
+
+// see https://github.com/spigradle/spigradle#repositories
+repositories {
+    mavenLocal()
+    mavenCentral()
+    //spigotmc()
+    //bungeecord()
+    //paper()
+    //essentialsX()
+    //bStats()
+    //enginehub()
+    //protocolLib()
+
+    // Vault
+    maven { url 'https://jitpack.io' }
+
+    // ProtocolLib
+    maven { url "https://repo.dmulloy2.net/repository/public/" }
+
+    //PlaceholderAPI
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+
+    //maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
+    //maven { url 'https://repo.xenondevs.xyz/releases' }
+}
+
+dependencies {
+    compileOnly 'org.jetbrains:annotations:24.0.1'
+    compileOnly 'org.yaml:snakeyaml:2.0'
+    compileOnly 'com.google.code.gson:gson:2.10.1'
+    compileOnly paper(project.property("mcVersion"))
+
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7.1"
+    compileOnly 'com.comphenix.protocol:ProtocolLib:5.0.0'
+    compileOnly 'me.clip:placeholderapi:2.11.3'
+
+    shadow "net.kyori:adventure-platform-bukkit:4.3.0"
+
+    // Inventory User Interface: https://github.com/NichtStudioCode/InvUI
+    //shadow "xyz.xenondevs.invui:invui:1.9"
+
+    // Annotation Command Framework: https://github.com/aikar/commands
+    //shadow "co.aikar:acf-paper:0.5.1-SNAPSHOT"
+
+    testImplementation 'org.yaml:snakeyaml:2.0'
+    testImplementation 'com.google.code.gson:gson:2.10.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+}
+
+shadowJar {
+    // ignore warning
+    archiveClassifier = ''
+    configurations = [project.configurations.runtimeClasspath, project.configurations.shadow]
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ["-parameters"]
+    options.fork = true
+}
+
+defaultTasks 'build'
+tasks.build.dependsOn(shadowJar)
+//tasks.publish.dependsOn(shadowJar)
+tasks.prepareSpigotPlugins.dependsOn(shadowJar)
+tasks.buildSpigot.dependsOn() {
+    def pluginName = project.property("pluginName")
+    def deletedFiles = fileTree(dir: 'debug/spigot/plugins', include: "${pluginName}*.jar").files
+    delete deletedFiles
+    if (deletedFiles.size() > 1) {
+        println "Deleted "+deletedFiles.size()+" duplicated plugin jar(s)"
+    }
+}
+
+prepareSpigotPlugins {
+    //Prevent spigradle from downloading wrong protocollib jar
+    exclude '**/ProtocolLib*.jar'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "skipped", "failed"
+    }
+    ignoreFailures = false
+}
