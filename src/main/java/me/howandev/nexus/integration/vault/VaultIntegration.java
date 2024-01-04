@@ -61,7 +61,7 @@ public class VaultIntegration extends PluginIntegration {
     }
 
     public @Nullable String getPrimaryGroup(final @NotNull Player player) {
-        if (permission == null) return null;
+        if (permission == null || !permission.hasGroupSupport()) return null;
 
         return permission.getPrimaryGroup(player);
     }

@@ -62,7 +62,7 @@ public class NexusPlugin extends JavaPlugin {
     public void onDisable() {
     }
 
-    private void setupConfiguration() {
+    public void setupConfiguration() {
         saveDefaultConfig();
 
         try {
@@ -84,7 +84,6 @@ public class NexusPlugin extends JavaPlugin {
     }
 
     private void setupListeners() {
-
         Bukkit.getPluginManager().registerEvents(new AsyncChatListener(), this);
     }
 }

@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import me.howandev.nexus.configuration.Configuration;
 
 import java.io.IOException;
+import java.util.List;
 
 public class NexusConfiguration {
     @Getter

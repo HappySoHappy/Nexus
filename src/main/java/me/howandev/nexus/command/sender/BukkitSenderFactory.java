@@ -1,7 +1,5 @@
 package me.howandev.nexus.command.sender;
 
-import me.howandev.nexus.command.sender.Sender;
-import me.howandev.nexus.command.sender.SenderFactory;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;

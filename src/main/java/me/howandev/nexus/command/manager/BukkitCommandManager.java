@@ -3,11 +3,10 @@ package me.howandev.nexus.command.manager;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Getter;
+import me.howandev.nexus.command.ParentCommand;
+import me.howandev.nexus.command.impl.*;
 import me.howandev.nexus.command.sender.BukkitSenderFactory;
 import me.howandev.nexus.command.Command;
-import me.howandev.nexus.command.impl.CommandFeed;
-import me.howandev.nexus.command.impl.CommandGamemode;
-import me.howandev.nexus.command.impl.CommandHeal;
 import me.howandev.nexus.command.sender.Sender;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
@@ -34,7 +33,8 @@ import static me.howandev.nexus.locale.Message.*;
 public class BukkitCommandManager implements Listener {
     private final JavaPlugin plugin;
     private final BukkitSenderFactory senderFactory;
-    private final Map<String, Command<?>> mainCommands;
+    private final Map<String, Command<?>> commands;
+    // Used when running async commands which need to be run in order
     private final AtomicBoolean executingCommand = new AtomicBoolean(false);
     private final ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
             .setDaemon(true)
@@ -44,17 +44,20 @@ public class BukkitCommandManager implements Listener {
     public BukkitCommandManager(JavaPlugin plugin, BukkitSenderFactory senderFactory) {
         this.plugin = plugin;
         this.senderFactory = senderFactory;
-        this.mainCommands = ImmutableList.<Command<?>>builder()
+        this.commands = ImmutableList.<Command<?>>builder()
                 .add(new CommandFeed())
+                .add(new CommandFly())
                 .add(new CommandGamemode())
                 .add(new CommandHeal())
+                .add(new CommandSpeed())
+                .add(new CommandTestParent())
                 .build()
                 .stream()
                 .collect(Collectors.toMap(c -> c.getName().toLowerCase(Locale.ROOT), Function.identity()));
     }
 
     public void registerAll() {
-        mainCommands.values().forEach(this::register);
+        commands.values().forEach(this::register);
     }
 
     public boolean register(Command<?> command) {
@@ -120,52 +123,21 @@ public class BukkitCommandManager implements Listener {
         };
     }
 
-
     @EventHandler
     public void onCommandSending(PlayerCommandSendEvent ev) {
-        for (Map.Entry<String, Command<?>> entry : mainCommands.entrySet()) {
+        Sender sender = senderFactory.wrap(ev.getPlayer());
+        String pluginName = plugin.getName().toLowerCase(Locale.ENGLISH).trim();
+
+        for (Map.Entry<String, Command<?>> entry : commands.entrySet()) {
             Command<?> command = entry.getValue();
-            Sender sender = senderFactory.wrap(ev.getPlayer());
             if (!command.isAuthorized(sender) || !command.shouldDisplay()) {
-                //todo: aliases and namespace
-                ev.getCommands().remove(entry.getKey());
+                ev.getCommands().remove(entry.getKey().toLowerCase(Locale.ENGLISH).trim());
+                ev.getCommands().remove(pluginName+":"+entry.getKey().toLowerCase(Locale.ENGLISH).trim());
+                for (String alias : command.getAliases()) {
+                    ev.getCommands().remove(alias.toLowerCase(Locale.ENGLISH).trim());
+                    ev.getCommands().remove(pluginName+":"+alias.toLowerCase(Locale.ENGLISH).trim());
+                }
             }
         }
     }
-
-    /*private void executeParent(Sender sender, String label, List<String> args) {
-        // Handle no arguments
-        if (args.isEmpty() || args.size() == 1 && args.get(0).trim().isEmpty()) {
-            sender.sendMessage("handling no arguments");
-            return;
-        }
-
-        // Look for the main command.
-        Command<?> main = this.mainCommands.get(args.get(0).toLowerCase(Locale.ROOT));
-        if (main == null) {
-            sender.sendMessage("there is no main command by that name: "+args.get(0));
-            return;
-        }
-
-        // Check the Sender has permission to use the main command.
-        if (!main.isAuthorized(sender)) {
-            sender.sendMessage("you are not authorized, allowing execution anyways");
-            //return;
-        }
-
-        args.remove(0); // remove the main command arg.
-
-        // Check the correct number of args were given for the main command
-        if (main.getArgumentCheck().test(args.size())) {
-            sender.sendMessage("invalid argument size");
-            return;
-        }
-
-        // Try to execute the command
-        try {
-            main.execute(this.plugin, sender, null, args, label);
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-        }
-    }*/
 }

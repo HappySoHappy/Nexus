@@ -2,7 +2,7 @@ package me.howandev.nexus.command.impl;
 
 import me.howandev.nexus.command.Argument;
 import me.howandev.nexus.command.CommandUtil;
-import me.howandev.nexus.command.SingleCommand;
+import me.howandev.nexus.command.SimpleCommand;
 import me.howandev.nexus.command.sender.Sender;
 import me.howandev.nexus.command.tab.CompletionSupplier;
 import me.howandev.nexus.command.tab.TabCompleter;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 import static me.howandev.nexus.locale.Message.*;
 
-public class CommandHeal extends SingleCommand {
+public class CommandHeal extends SimpleCommand {
     public CommandHeal() {
         super("heal", "command.heal.description", "command.heal");
     }

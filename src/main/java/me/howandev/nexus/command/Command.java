@@ -3,7 +3,6 @@ package me.howandev.nexus.command;
 import lombok.Getter;
 import me.howandev.nexus.command.sender.Sender;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +11,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static me.howandev.nexus.locale.Message.*;
+import static me.howandev.nexus.locale.Message.COMMAND_DESCRIPTION;
 
 @Getter
 public abstract class Command<T> {
@@ -28,7 +27,7 @@ public abstract class Command<T> {
         this.permission = permission;
         this.argumentCheck = integer -> {
             // There are no arguments accepted
-            if (getArguments().isEmpty()) return false;
+            if (getArguments().isEmpty() && integer == 0) return true;
 
             List<Argument> arguments = getArguments().get();
             if (integer >= arguments.stream().filter(Argument::isRequired).toList().size()
@@ -37,6 +36,14 @@ public abstract class Command<T> {
             // Check if there are enough required arguments
             return integer == arguments.stream().filter(Argument::isRequired).toList().size();
         };
+    }
+
+    public Command(@NotNull String name, String descriptionKey, @Nullable String permission, @NotNull Predicate<Integer> argumentCheck) {
+        this.name = name;
+        this.aliases = new ArrayList<>();
+        this.description = COMMAND_DESCRIPTION.build(descriptionKey);
+        this.permission = permission;
+        this.argumentCheck = argumentCheck;
     }
 
     public Command(@NotNull String name, @NotNull List<String> aliases, String descriptionKey, @Nullable String permission) {
@@ -46,7 +53,7 @@ public abstract class Command<T> {
         this.permission = permission;
         this.argumentCheck = integer -> {
             // There are no arguments accepted
-            if (getArguments().isEmpty()) return false;
+            if (getArguments().isEmpty() && integer == 0) return true;
 
             List<Argument> arguments = getArguments().get();
             if (integer >= arguments.stream().filter(Argument::isRequired).toList().size()
@@ -57,20 +64,20 @@ public abstract class Command<T> {
         };
     }
 
-    // Specification method - default implementation is provided as some commands do not require additional specification.
-    public Optional<List<Specification>> getSpecification() {
-        return Optional.empty();
+    public Command(@NotNull String name, @NotNull List<String> aliases, String descriptionKey, @Nullable String permission, @NotNull Predicate<Integer> argumentCheck) {
+        this.name = name;
+        this.aliases = aliases;
+        this.description = COMMAND_DESCRIPTION.build(descriptionKey);
+        this.permission = permission;
+        this.argumentCheck = argumentCheck;
     }
 
-    // Convenience methods for specification
     public boolean specifiesSyncExecution() {
-        return getSpecification().isPresent()
-                && getSpecification().get().contains(Specification.SYNCHRONOUS_EXECUTION);
+        return false;
     }
 
     public boolean specifiesConsoleOnly() {
-        return getSpecification().isPresent()
-                && getSpecification().get().contains(Specification.CONSOLE_ONLY);
+        return false;
     }
 
     public abstract Optional<List<Argument>> getArguments();

@@ -13,12 +13,12 @@ import static me.howandev.nexus.locale.Message.COMMAND_WRONG_USAGE;
 /**
  * Represents a single top level command
  */
-public abstract class SingleCommand extends Command<Void> {
-    public SingleCommand(@NotNull String name, @NotNull String descriptionKey, @Nullable String permission) {
+public abstract class SimpleCommand extends Command<Void> {
+    public SimpleCommand(@NotNull String name, @NotNull String descriptionKey, @Nullable String permission) {
         super(name, descriptionKey, permission);
     }
 
-    public SingleCommand(@NotNull String name, @NotNull List<String> aliases, @NotNull String descriptionKey, @Nullable String permission) {
+    public SimpleCommand(@NotNull String name, @NotNull List<String> aliases, @NotNull String descriptionKey, @Nullable String permission) {
         super(name, aliases, descriptionKey, permission);
     }
 

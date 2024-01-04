@@ -57,10 +57,10 @@ group-overwrite:
   owner:
     chat:
       rich-format:
-        prefix: "<dark_red>Owner"
-        message: "<red><bold>%message%"
+        prefix: "<dark_red><bold>[Owner]"
+        message: "<red>%message%"
   admin:
     chat:
       rich-format:
-        prefix: "<red>ADMIN"
+        prefix: "<red>[Admin]"
         message: "<red>%message%"

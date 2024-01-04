@@ -33,7 +33,6 @@ public class AsyncChatListener implements Listener {
             if (configuration.chatUseFormat()) {
                 String chatFormat = configuration.chatFormat();
 
-                //TODO: use integration instead of calling PlaceholderAPI
                 String chatFormatted = papiIntegration.setPlaceholders(player, chatFormat);
                 Component chatComponent = LegacyComponentSerializer.legacy('&').deserialize(chatFormatted);
 
@@ -85,18 +84,17 @@ public class AsyncChatListener implements Listener {
 
             String messageFormat = richFormat.message();
             if (!messageFormat.isEmpty()) {
-                TagResolver.builder().resolver(StandardTags.color());
-
-                MiniMessage.builder().tags(TagResolver.builder().build());
+                TagResolver resolver = TagResolver.builder().resolver(StandardTags.color()).build();
 
                 String messageFormatted = papiIntegration.setPlaceholders(player, messageFormat);
-                Component messageComponent = MiniMessage.miniMessage().deserialize(messageFormatted)
+                Component messageComponent = MiniMessage.miniMessage().deserialize(messageFormatted, resolver)
                         .replaceText(builder -> builder.matchLiteral("%message%").replacement(message));
                 if (appendSpace) componentBuilder.appendSpace();
                 componentBuilder.append(messageComponent);
             }
 
             //TODO: add custom serializer to allow certain tags usage and ignore others.
+            // this allows us to create custom rules for groups etc... eg. :EMOTES:
             return componentBuilder.build();
         });
     }

@@ -2,8 +2,7 @@ package me.howandev.nexus.command.impl;
 
 import me.howandev.nexus.command.Argument;
 import me.howandev.nexus.command.CommandUtil;
-import me.howandev.nexus.command.SingleCommand;
-import me.howandev.nexus.command.Specification;
+import me.howandev.nexus.command.SimpleCommand;
 import me.howandev.nexus.command.sender.Sender;
 import me.howandev.nexus.command.tab.CompletionSupplier;
 import me.howandev.nexus.command.tab.TabCompleter;
@@ -17,7 +16,7 @@ import java.util.stream.Stream;
 
 import static me.howandev.nexus.locale.Message.*;
 
-public class CommandGamemode extends SingleCommand {
+public class CommandGamemode extends SimpleCommand {
     public static final Map<String, String> GAMEMODE_PERMISSIONS = Map.ofEntries(
             Map.entry("survival", "command.gamemode.survival"),
             Map.entry("creative", "command.gamemode.creative"),
@@ -29,8 +28,8 @@ public class CommandGamemode extends SingleCommand {
     }
 
     @Override
-    public Optional<List<Specification>> getSpecification() {
-        return Optional.of(List.of(Specification.SYNCHRONOUS_EXECUTION));
+    public boolean specifiesSyncExecution() {
+        return true;
     }
 
     @Override
@@ -98,10 +97,6 @@ public class CommandGamemode extends SingleCommand {
                 Player target = CommandUtil.getVisiblePlayer(sender, targetArgument);
                 if (target == null || !target.isOnline()) {
                     SEARCH_PLAYER_NOT_FOUND.send(sender);
-                    return;
-                }
-
-                if (target.getUniqueId() == sender.getUniqueId()) {
                     return;
                 }
 

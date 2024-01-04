@@ -43,6 +43,14 @@ public interface Message {
                     .key("command.unexpected-exception")
             ).build();
 
+    Args1<String> COMMAND_UNKNOWN = (command) -> text()
+            .append(translatable()
+                    .key("command.unknown")
+                    .args(
+                            text(command)
+                    )
+            ).build();
+
     Args1<Component> COMMAND_WRONG_USAGE = (properUsage) -> text()
             .append(translatable()
                     .key("command.wrong-usage")
@@ -63,6 +71,71 @@ public interface Message {
             .append(translatable()
                     .key("command.feed.feed-self")
             ).build();
+
+
+    //region Command Fly
+    Args1<String> COMMAND_FLIGHT_ENABLED_OTHER = (target) -> text()
+            .append(translatable()
+                    .key("command.fly.set_enabled-other")
+                    .args(
+                            text(target)
+                    )
+            ).build();
+
+    Args1<String> COMMAND_FLIGHT_DISABLED_OTHER = (target) -> text()
+            .append(translatable()
+                    .key("command.fly.set_disabled-other")
+                    .args(
+                            text(target)
+                    )
+            ).build();
+
+    Args0 COMMAND_FLIGHT_ENABLED_SELF = () -> text()
+            .append(translatable()
+                    .key("command.fly.set_enabled-self")
+            ).build();
+
+    Args0 COMMAND_FLIGHT_DISABLED_SELF = () -> text()
+            .append(translatable()
+                    .key("command.fly.set_disabled-self")
+            ).build();
+    //endregion
+
+    //region Command - Speed
+    Args2<String, Float> COMMAND_SPEED_SET_FLY_OTHER = (target, speed) -> text()
+            .append(translatable()
+                    .key("command.speed.set_fly-other")
+                    .args(
+                            text(target),
+                            text(speed)
+                    )
+            ).build();
+
+    Args2<String, Float> COMMAND_SPEED_SET_WALK_OTHER = (target, speed) -> text()
+            .append(translatable()
+                    .key("command.speed.set_walk-other")
+                    .args(
+                            text(target),
+                            text(speed)
+                    )
+            ).build();
+
+    Args1<Float> COMMAND_SPEED_SET_FLY_SELF = (speed) -> text()
+            .append(translatable()
+                    .key("command.speed.set_fly-self")
+                    .args(
+                            text(speed)
+                    )
+            ).build();
+
+    Args1<Float> COMMAND_SPEED_SET_WALK_SELF = (speed) -> text()
+            .append(translatable()
+                    .key("command.speed.set_walk-self")
+                    .args(
+                            text(speed)
+                    )
+            ).build();
+    //endregion
 
     Args1<String> COMMAND_GAMEMODE_MISSING_MODE_PERMISSION = (gamemode) -> text()
             .append(translatable()
@@ -96,8 +169,7 @@ public interface Message {
             .append(translatable()
                     .key("command.gamemode.unknown-mode")
                     .args(
-                            translatable()
-                                    .key("gamemode." + gamemode)
+                            text(gamemode)
                     )
             ).build();
 

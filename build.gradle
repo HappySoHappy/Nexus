@@ -4,7 +4,6 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'kr.entree.spigradle' version '2.4.3'
     id 'io.freefair.lombok' version '8.0.1'
-    //id 'nebula.release' version '17.2.1'
 }
 
 //apply from: "$rootDir/gradle/publish.gradle"
@@ -24,11 +23,6 @@ spigot {
     depends = [ ]
     softDepends = [ "Vault", "ProtocolLib", "PlaceholderAPI" ]
     loadBefore = [ ]
-    commands {
-        nexus {
-            aliases = ['nx']
-        }
-    }
     //excludeLibraries = ['*']
 }
 
@@ -58,6 +52,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.projectlombok:lombok:1.18.26'
     compileOnly 'org.jetbrains:annotations:24.0.1'
     compileOnly 'org.yaml:snakeyaml:2.0'
     compileOnly 'com.google.code.gson:gson:2.10.1'
