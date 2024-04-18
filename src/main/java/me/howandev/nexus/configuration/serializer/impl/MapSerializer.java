@@ -11,18 +11,9 @@ import java.util.Map;
 
 public class MapSerializer implements Serializer<Map<?, ?>> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "Map";
     }
-
-    /*
-    @Override
-    public @NotNull Map<?, ?> serialize(final @NotNull Object value) {
-        if (!(value instanceof Map<?, ?> map)) throw new IllegalArgumentException("Unsupported type was supplied to the Serializer!");
-
-        return map;
-    }
-    */
 
     //TODO: this method needs a lot of testing, on both YAML and JSON - see method above.
     @Override
@@ -33,6 +24,7 @@ public class MapSerializer implements Serializer<Map<?, ?>> {
 
         if (!(value instanceof Map<?, ?> map)) throw new IllegalArgumentException("Unsupported type was supplied to the Serializer!");
         Map<String, Object> serializedMap = new LinkedHashMap<>();
+
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             if (entry.getValue() == null) {
                 serializedMap.put(entry.getKey().toString(), null);

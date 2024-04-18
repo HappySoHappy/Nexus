@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class LongSerializer implements Serializer<Long> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "Long";
     }
 

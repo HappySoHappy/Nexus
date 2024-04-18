@@ -2,6 +2,7 @@ package me.howandev.nexus.listener;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.howandev.nexus.NexusConfiguration;
+import me.howandev.nexus.NexusConstants;
 import me.howandev.nexus.NexusPlugin;
 import me.howandev.nexus.integration.papi.PlaceholderApiIntegration;
 import me.howandev.nexus.integration.vault.VaultIntegration;
@@ -11,8 +12,11 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
+import java.util.Locale;
 
 public class AsyncChatListener implements Listener {
     //TODO: it is possible to use translatables here, but they will not render properly to the sender.
@@ -24,9 +28,11 @@ public class AsyncChatListener implements Listener {
 
             String primaryGroup = vaultIntegration.getPrimaryGroup(player);
             if (primaryGroup != null) {
+                primaryGroup = primaryGroup.replace(".", "").replace(" ", "_").toLowerCase(Locale.ROOT);
                 NexusConfiguration groupConfiguration = NexusPlugin.getGroupConfiguration().get(primaryGroup);
-                if (groupConfiguration != null)
+                if (groupConfiguration != null) {
                     configuration = groupConfiguration;
+                }
             }
 
             PlaceholderApiIntegration papiIntegration = NexusPlugin.getInstance().getIntegrationManager().papiIntegration();
@@ -48,7 +54,17 @@ public class AsyncChatListener implements Listener {
             String prefixFormat = richFormat.prefix();
             if (!prefixFormat.isEmpty()) {
                 String prefixFormatted = papiIntegration.setPlaceholders(player, prefixFormat);
-                Component prefixComponent = MiniMessage.miniMessage().deserialize(prefixFormatted);
+                // minimessage legacy serializer does not serialize <white>, thank you
+                prefixFormatted = prefixFormatted.replace("&f", "<white>").replace("§f", "<white>");
+
+                Component prefixComponentLegacy = LegacyComponentSerializer.legacySection().deserialize(prefixFormatted);
+                String prefixSection = PlainTextComponentSerializer.plainText().serialize(prefixComponentLegacy);
+
+                //todo: find a better way to translate legacy formatting
+                prefixComponentLegacy = LegacyComponentSerializer.legacyAmpersand().deserialize(prefixSection);
+                String prefixAmpersand = PlainTextComponentSerializer.plainText().serialize(prefixComponentLegacy);
+
+                Component prefixComponent = MiniMessage.miniMessage().deserialize(prefixAmpersand);
                 componentBuilder.append(prefixComponent);
                 appendSpace = true;
             }
@@ -57,7 +73,7 @@ public class AsyncChatListener implements Listener {
             if (!senderFormat.isEmpty()) {
                 String senderFormatted = papiIntegration.setPlaceholders(player, senderFormat);
                 Component senderComponent = MiniMessage.miniMessage().deserialize(senderFormatted)
-                        .replaceText(builder -> builder.matchLiteral("%player%").replacement(playerDisplayName));
+                        .replaceText(builder -> builder.matchLiteral("%player%").replacement(player.getName()));
 
                 if (appendSpace) componentBuilder.appendSpace();
                 componentBuilder.append(senderComponent);

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BooleanSerializer implements Serializer<Boolean> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "Boolean";
     }
 

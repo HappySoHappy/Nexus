@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ByteSerializer implements Serializer<Byte> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "Byte";
     }
 

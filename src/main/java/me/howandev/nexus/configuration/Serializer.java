@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public interface Serializer<T> {
     String SERIALIZED_OBJECT_KEY = "==";
     Pattern FORCE_SERIALIZER_PATTERN = Pattern.compile("^\\((\\S.*)\\) (.*)");
-    @NotNull String getAlias();
+    @NotNull String getName();
     @NotNull Object serialize(final @NotNull Object value) throws IllegalArgumentException;
     //value straight from parser
     @NotNull Object deserialize(final @NotNull Object value) throws IllegalArgumentException;

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FloatSerializer implements Serializer<Float> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "Float";
     }
 

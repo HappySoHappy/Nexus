@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CharacterSerializer implements Serializer<Character> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "Char";
     }
 

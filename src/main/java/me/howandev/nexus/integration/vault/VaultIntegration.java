@@ -13,6 +13,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+//todo: remove vault
 public class VaultIntegration extends PluginIntegration {
     @Getter
     @Accessors(fluent = true)

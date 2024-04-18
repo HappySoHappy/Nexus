@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class DoubleSerializer implements Serializer<Double> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "Double";
     }
 

@@ -22,8 +22,8 @@ public class CommandReload extends ChildCommand<Void> {
 
     @Override
     public void execute(JavaPlugin plugin, Sender sender, Void target, List<String> args, String label) throws Exception {
-        sender.sendMessage("reload");
+        long start = System.currentTimeMillis();
         NexusPlugin.getInstance().setupConfiguration();
-        sender.sendMessage("success reload");
+        sender.sendMessage("success reload - took ("+(System.currentTimeMillis() - start)+"ms)");
     }
 }

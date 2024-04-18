@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ListSerializer implements Serializer<List<?>> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "List";
     }
 

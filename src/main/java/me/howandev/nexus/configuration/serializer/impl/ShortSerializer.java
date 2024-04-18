@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ShortSerializer implements Serializer<Short> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "Short";
     }
 

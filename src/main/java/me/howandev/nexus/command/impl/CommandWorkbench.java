@@ -4,26 +4,22 @@ import me.howandev.nexus.command.Argument;
 import me.howandev.nexus.command.CommandUtil;
 import me.howandev.nexus.command.SimpleCommand;
 import me.howandev.nexus.command.sender.Sender;
-import me.howandev.nexus.command.tab.CompletionSupplier;
-import me.howandev.nexus.command.tab.TabCompleter;
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static me.howandev.nexus.locale.Message.*;
 
-public class CommandHeal extends SimpleCommand {
-    public static final String USE_SELF = "command.heal.self";
-    public static final String USE_OTHER = "command.heal.other";
-    public CommandHeal() {
-        super("heal", "command.heal.description", "command.heal");
+public class CommandWorkbench extends SimpleCommand {
+    public static final String USE_SELF = "command.workbench.self";
+    public static final String USE_OTHER = "command.workbench.other";
+    public CommandWorkbench() {
+        super("workbench", List.of("crafting"), "description", "command.workbench");
     }
 
     @Override
@@ -46,9 +42,14 @@ public class CommandHeal extends SimpleCommand {
                     return;
                 }
 
-                heal(player);
-                COMMAND_HEAL_SELF.send(sender);
-                plugin.getLogger().info(sender.getName() + " was healed");
+                InventoryView view = player.openWorkbench(null, true);
+                if (view == null) {
+                    plugin.getLogger().info("workbench view was null.");
+                    return;
+                }
+
+                //COMMAND_HEAL_SELF.send(sender);
+                plugin.getLogger().info(sender.getName() + " opened an workbench");
             }
 
             case 1 -> {
@@ -67,33 +68,15 @@ public class CommandHeal extends SimpleCommand {
                     return;
                 }
 
-                heal(target);
-                COMMAND_HEAL_OTHER.send(sender, target.getName());
-                plugin.getLogger().info((sender.isConsole() ? "(CONSOLE)" : sender.getName()) + " healed " + target.getName());
+                InventoryView view = target.openWorkbench(null, true);
+                if (view == null) {
+                    plugin.getLogger().info("workbench view was null.");
+                    return;
+                }
+
+                //COMMAND_HEAL_OTHER.send(sender, target.getName());
+                plugin.getLogger().info((sender.isConsole() ? "(CONSOLE)" : sender.getName()) + " opened a workbench for " + target.getName());
             }
         }
     }
-
-    private void heal(Player player) {
-        double health = 20;
-        AttributeInstance healthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if (healthAttribute != null) {
-            health = healthAttribute.getValue();
-        }
-
-        player.setHealth(health);
-    }
-
-    @Override
-    public List<String> tabComplete(JavaPlugin plugin, Sender sender, List<String> args) {
-        return TabCompleter.create()
-                .at(0, CompletionSupplier.startsWith(
-                                () -> sender.hasPermission("command.heal.other")
-                                        ? CommandUtil.getVisiblePlayers(sender).stream().map(Player::getName)
-                                        : Stream.empty()
-                        )
-                )
-                .complete(args);
-    }
 }
-

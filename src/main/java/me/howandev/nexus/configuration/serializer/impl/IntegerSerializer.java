@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class IntegerSerializer implements Serializer<Integer> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "Integer";
     }
 

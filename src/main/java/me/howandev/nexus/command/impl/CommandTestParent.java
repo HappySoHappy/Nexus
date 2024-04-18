@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CommandTestParent extends ParentCommand<Void, Void> {
     public CommandTestParent() {
-        super("testparent", "desc.testparent", "command.testparent", Type.NO_ARGUMENT_FOR_TARGET, ImmutableList.<ChildCommand<Void>>builder()
+        super("nexus", "desc.testparent", "command.testparent", Type.NO_ARGUMENT_FOR_TARGET, ImmutableList.<ChildCommand<Void>>builder()
                 .add(new CommandReload())
                 .build()
                 .stream()

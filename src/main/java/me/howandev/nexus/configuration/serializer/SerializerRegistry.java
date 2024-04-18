@@ -84,7 +84,7 @@ public class SerializerRegistry {
         if (object instanceof String stringValue) {
             try {
                 for (Map.Entry<Class<?>, Serializer<?>> entry : REGISTERED_SERIALIZERS.entrySet()) {
-                    if (entry.getValue().getAlias().equalsIgnoreCase(stringValue))
+                    if (entry.getValue().getName().equalsIgnoreCase(stringValue))
                         return entry.getValue();
                 }
 

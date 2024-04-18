@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 
 public class StringSerializer implements Serializer<String> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "String";
     }
 

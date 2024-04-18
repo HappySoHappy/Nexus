@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class ConfigurationSerializer implements Serializer<Configuration> {
     @Override
-    public @NotNull String getAlias() {
+    public @NotNull String getName() {
         return "Configuration";
     }
 

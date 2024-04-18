@@ -53,6 +53,14 @@ chat:
     # - %message%, Content of the chat message.
     message: "%message%"
 
+# Note:
+# If your group overwrite doesn't work its most likely you have provided invalid group *display* name
+# This is caused by VaultAPI's messy handling of groups. As of 1.7.3 there is no way of obtaining group id.
+# This is the following way display names are sanitized and passed to the overwrites:
+# Spaces " " - Replaced by underscores "_"
+# Dots "." - Removed.
+# Everything is then converted to lower case e.g.:
+# Sr. Moderator -> sr_moderator
 group-overwrite:
   owner:
     chat:
