@@ -139,6 +139,26 @@ public class TranslationManager {
         } catch (NoSuchFieldException | IllegalAccessException ignored) { }
     }
 
+    public @NotNull String getTranslation(final @NotNull Player player, final @NotNull TranslationKey key, final String... replacements) {
+        String message = getMessage(player, key);
+        if (replacements.length > 0) {
+            message = TextUtil.replace(message, replacements);
+        }
+
+        message = replaceTranslations(player, message);
+        return message;
+    }
+
+    public @NotNull String getTranslation(final @NotNull Player player, final @NotNull String key, final String... replacements) {
+        String message = getMessage(player, TranslationKey.of(key));
+        if (replacements.length > 0) {
+            message = TextUtil.replace(message, replacements);
+        }
+
+        message = replaceTranslations(player, message);
+        return message;
+    }
+
     private static @Nullable Field getEntityField(final @NotNull Player player) throws NoSuchFieldException {
         Class<?> clazz = player.getClass();
         while (clazz != Object.class) {
@@ -175,25 +195,5 @@ public class TranslationManager {
 
         matcher.appendTail(sb);
         return sb.toString();
-    }
-
-    public @NotNull String getTranslation(final @NotNull Player player, final @NotNull TranslationKey key, final String... replacements) {
-        String message = getMessage(player, key);
-        if (replacements.length > 0) {
-            message = TextUtil.replace(message, replacements);
-        }
-
-        message = replaceTranslations(player, message);
-        return message;
-    }
-
-    public @NotNull String getTranslation(final @NotNull Player player, final @NotNull String key, final String... replacements) {
-        String message = getMessage(player, TranslationKey.of(key));
-        if (replacements.length > 0) {
-            message = TextUtil.replace(message, replacements);
-        }
-
-        message = replaceTranslations(player, message);
-        return message;
     }
 }
