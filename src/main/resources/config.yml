@@ -1,7 +1,7 @@
 chat:
   # If false, all chat packets will be dropped, this includes server messages.
   # This WILL cause issues with plugins! Here be Dragons.
-  enabled: true
+  #enabled: true #todo: not implemented
 
   # If true, chat will be using format specified below instead of using modern formatter.
   use-format: false
@@ -14,6 +14,62 @@ chat:
   # - %player%, player's name.
   # - %message%, Content of the chat message.
   format: "<%player%> %message%"
+
+  color-replacements:
+    0:
+      patterns:
+        - "&0"
+        - "<czarny>"
+      replacement: "<black>"
+    f:
+      patterns:
+        - "&f"
+        - "<bialy>"
+        - "<biały>"
+      replacement: "<white>"
+    g:
+      patterns:
+        - "&g"
+        - "<pomaranczowy>"
+        - "<pomarańczowy>"
+      replacement: "<#ff9966>"
+
+  chat-replacements:
+    a:
+      patterns:
+        - ":a:"
+        - ":A:"
+      replacement: "<white>EMOJI A</white>"
+
+  filters:
+    cela_cwela:
+      action: CENSOR # add a way to CENSOR + hover event with uncensored
+      patterns:
+        - "(?<violation>cwel)"
+        - "[cela[ ]]cwela"
+    pedaly_logitech:
+      action: REPLACE
+      replacement: "zestaw pedalow logitech"
+      patterns:
+        - "pedal"
+    mf_ssie_fiuta:
+      action: DENY
+      strict-casing: true # otherwise equalsIgnoreCase
+      commands: [ ]
+      patterns:
+        - "minefox"
+    slurs:
+      action: GHOST
+      commands: [ ]
+      patterns: ["nigger"]
+    ip_v4:
+      action: NOTIFY
+      commands: [ ]
+      patterns:
+        - '((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}'
+    jebac_universe:
+      patterns:
+        - "[the[.]]universe[[.]net[work]]"
 
   # Chat message format is structured in the following way:
   # <prefix> <sender> <suffix> <separator> <message>

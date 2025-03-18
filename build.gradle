@@ -21,7 +21,7 @@ spigot {
     load = project.property("pluginLoad")
     authors = [project.property("pluginAuthors")]
     depends = [ ]
-    softDepends = [ "Vault", "ProtocolLib", "PlaceholderAPI" ]
+    softDepends = [ "LuckPerms", "Vault", "ProtocolLib", "PlaceholderAPI" ]
     loadBefore = [ ]
     //excludeLibraries = ['*']
 }
@@ -58,9 +58,10 @@ dependencies {
     compileOnly 'com.google.code.gson:gson:2.10.1'
     compileOnly paper(project.property("mcVersion"))
 
+    compileOnly 'net.luckperms:api:5.4'
     compileOnly "com.github.MilkBowl:VaultAPI:1.7.1"
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.0.0'
-    compileOnly 'me.clip:placeholderapi:2.11.3'
+    compileOnly 'me.clip:placeholderapi:2.11.6'
 
     shadow "net.kyori:adventure-platform-bukkit:4.3.0"
 

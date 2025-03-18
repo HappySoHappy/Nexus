@@ -9,7 +9,7 @@ import java.util.List;
  * Tokenizes strings on whitespace, but ignoring whitespace enclosed within quotes.
  */
 public class QuotedStringTokenizer {
-    private String string;
+    private final String string;
     private int cursor;
     public QuotedStringTokenizer(String string) {
         this.string = string;

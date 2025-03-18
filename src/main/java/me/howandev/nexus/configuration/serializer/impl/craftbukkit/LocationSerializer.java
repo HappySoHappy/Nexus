@@ -20,6 +20,8 @@ public class LocationSerializer implements Serializer<Location> {
     public @NotNull Map<String, Object> serialize(@NotNull Object value) throws IllegalArgumentException {
         if (!(value instanceof Location location)) throw new IllegalArgumentException("Unsupported type was supplied to the Serializer!");
 
+        //location.serialize();
+
         Map<String, Object> map = new LinkedHashMap<>();
         //todo: this needs more work and should be automatically done
         // doesnt matter for me, but would be cool

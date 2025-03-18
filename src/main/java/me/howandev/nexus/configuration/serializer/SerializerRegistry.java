@@ -3,6 +3,8 @@ package me.howandev.nexus.configuration.serializer;
 import me.howandev.nexus.configuration.Configuration;
 import me.howandev.nexus.configuration.Serializer;
 import me.howandev.nexus.configuration.serializer.impl.*;
+import me.howandev.nexus.configuration.serializer.impl.craftbukkit.ItemStackSerializer;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +26,8 @@ public class SerializerRegistry {
     public static final StringSerializer STRING_SERIALIZER;
 
     static {
+        register(ItemStack.class, new ItemStackSerializer());
+
         BOOLEAN_SERIALIZER = new BooleanSerializer();
         register(Boolean.class, BOOLEAN_SERIALIZER);
 

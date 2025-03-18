@@ -3,7 +3,6 @@ package me.howandev.nexus.command.manager;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Getter;
-import me.howandev.nexus.command.ParentCommand;
 import me.howandev.nexus.command.impl.*;
 import me.howandev.nexus.command.sender.BukkitSenderFactory;
 import me.howandev.nexus.command.Command;
@@ -48,9 +47,12 @@ public class BukkitCommandManager implements Listener {
                 .add(new CommandFeed())
                 .add(new CommandFly())
                 .add(new CommandGamemode())
+                .add(new CommandHat())
                 .add(new CommandHeal())
+                .add(new CommandKit())
                 .add(new CommandSpeed())
                 .add(new CommandTestParent())
+                .add(new CommandWorkbench())
                 .build()
                 .stream()
                 .collect(Collectors.toMap(c -> c.getName().toLowerCase(Locale.ROOT), Function.identity()));

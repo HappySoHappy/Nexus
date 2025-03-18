@@ -23,6 +23,11 @@ public class CommandWorkbench extends SimpleCommand {
     }
 
     @Override
+    public boolean specifiesSyncExecution() {
+        return true;
+    }
+
+    @Override
     public Optional<List<Argument>> getArguments() {
         List<Argument> args = new ArrayList<>();
         args.add(new Argument("argument.player", "argument.description.player", false));
