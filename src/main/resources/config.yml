@@ -15,7 +15,7 @@ chat:
   # - %message%, Content of the chat message.
   format: "<%player%> %message%"
 
-  color-replacements:
+  color-replacements: #https://docs.advntr.dev/minimessage/api.html#parser-directives
     0:
       patterns:
         - "&0"
@@ -70,6 +70,11 @@ chat:
     jebac_universe:
       patterns:
         - "[the[.]]universe[[.]net[work]]"
+    unicode_fonts:
+      action: REPLACE
+      replacement: ""
+      patterns:
+        - "[\u1380-\uFAFF]"
 
   # Chat message format is structured in the following way:
   # <prefix> <sender> <suffix> <separator> <message>

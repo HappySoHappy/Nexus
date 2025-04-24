@@ -123,10 +123,16 @@ public class NexusPlugin extends JavaPlugin {
             fileConfiguration.load();
 
             var economy = new File(getDataFolder(), "economy.yml");
+            if (economy.exists() && economy.isDirectory()) {
+                economy.delete();
+            }
+
             if (!economy.exists())
                 economy.createNewFile();
 
             economyStorage.load();
+
+            configuration = new NexusConfiguration(fileConfiguration);
             configuration.load();
 
             Configuration groupOverwriteSection = fileConfiguration.getSection("group-overwrite");

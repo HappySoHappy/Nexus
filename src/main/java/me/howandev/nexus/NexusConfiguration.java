@@ -54,6 +54,56 @@ public class NexusConfiguration {
         chatRichFormat.load();
     }
 
+    public NexusConfiguration merge(NexusConfiguration other) {
+        NexusConfiguration merged = new NexusConfiguration(this.configuration);
+
+        // Booleans and strings
+        merged.chatUseFormat = other.chatUseFormat || this.chatUseFormat;
+        merged.chatFormat = !other.chatFormat.equals("<%player%> %message%") ? other.chatFormat : this.chatFormat;
+
+        // Color replacements
+        merged.colorReplacement.colorReplacements.addAll(this.colorReplacement.colorReplacements);
+        for (ColorReplacement cr : other.colorReplacement.colorReplacements) {
+            ColorReplacement copy = new ColorReplacement()
+                    .patterns(new ArrayList<>(cr.patterns()))
+                    .replacement(cr.replacement());
+            merged.colorReplacement.colorReplacements.add(copy);
+        }
+
+        // Chat replacements
+        merged.chatReplacement.chatReplacements.addAll(this.chatReplacement.chatReplacements);
+        for (ChatReplacement cr : other.chatReplacement.chatReplacements) {
+            ChatReplacement copy = new ChatReplacement()
+                    .permission(cr.permission())
+                    .patterns(new ArrayList<>(cr.patterns()))
+                    .replacement(cr.replacement());
+            merged.chatReplacement.chatReplacements.add(copy);
+        }
+
+        // Chat filters
+        merged.chatFilter.filters.addAll(this.chatFilter.filters);
+        for (FilterConfiguration.Filter f : other.chatFilter.filters) {
+            FilterConfiguration.Filter copy = merged.chatFilter.new Filter()
+                    .action(f.action())
+                    .replacement(f.replacement())
+                    .strictCasing(f.strictCasing())
+                    .commands(new ArrayList<>(f.commands()))
+                    .patterns(new ArrayList<>(f.patterns()));
+            merged.chatFilter.filters.add(copy);
+        }
+
+        // Rich format — prefer 'other' fields if set, fallback to base
+        merged.chatRichFormat
+                .prefix(!other.chatRichFormat.prefix().isEmpty() ? other.chatRichFormat.prefix() : this.chatRichFormat.prefix())
+                .sender(!other.chatRichFormat.sender().isEmpty() ? other.chatRichFormat.sender() : this.chatRichFormat.sender())
+                .suffix(!other.chatRichFormat.suffix().isEmpty() ? other.chatRichFormat.suffix() : this.chatRichFormat.suffix())
+                .separator(!other.chatRichFormat.separator().isEmpty() ? other.chatRichFormat.separator() : this.chatRichFormat.separator())
+                .message(!other.chatRichFormat.message().equals("%message%") ? other.chatRichFormat.message() : this.chatRichFormat.message());
+
+        return merged;
+    }
+
+
     public class ColorReplacementConfiguration {
         @Getter
         private List<ColorReplacement> colorReplacements = new ArrayList<>();
@@ -61,6 +111,8 @@ public class NexusConfiguration {
         public void load() {
             Configuration replacementsSection = configuration.getSection("chat.color-replacements");
             if (replacementsSection != null) {
+                colorReplacements.clear();
+
                 for (String replacementId : replacementsSection.getKeys(false)) {
                     Configuration replacementConfiguration = replacementsSection.getSection(replacementId);
 
@@ -88,13 +140,17 @@ public class NexusConfiguration {
         private List<ChatReplacement> chatReplacements = new ArrayList<>();
 
         public void load() {
+            chatReplacements.clear();
+
             Configuration replacementsSection = configuration.getSection("chat.chat-replacements");
             if (replacementsSection != null) {
+
                 for (String replacementId : replacementsSection.getKeys(false)) {
                     Configuration replacementConfiguration = replacementsSection.getSection(replacementId);
 
                     ChatReplacement chatReplacement = new ChatReplacement();
 
+                    chatReplacement.permission(replacementConfiguration.getString("permission", ""));
                     chatReplacement.patterns((List<String>) replacementConfiguration.getList("patterns"));
                     chatReplacement.replacement(replacementConfiguration.getString("replacement"));
 
@@ -108,6 +164,7 @@ public class NexusConfiguration {
     @Setter
     @Accessors(fluent = true)
     public class ChatReplacement {
+        private String permission = "";
         private List<String> patterns = new ArrayList<>();
         private String replacement;
     }
@@ -118,8 +175,11 @@ public class NexusConfiguration {
         @Getter
         private List<Filter> filters = new ArrayList<>();
         public void load() {
+            filters.clear();
+
             Configuration filtersSection = configuration.getSection("chat.filters");
             if (filtersSection != null) {
+
                 for (String filterId : filtersSection.getKeys(false)) {
                     Configuration filterConfiguration = filtersSection.getSection(filterId);
 
@@ -150,8 +210,7 @@ public class NexusConfiguration {
             CENSOR,
             REPLACE,
             DENY,
-            GHOST,
-            NOTIFY;
+            GHOST;
         }
     }
 

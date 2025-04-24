@@ -1,8 +1,6 @@
 package me.howandev.nexus.util;
 
 import com.google.common.collect.ImmutableMap;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.*;
 import net.kyori.adventure.text.minimessage.Context;
@@ -191,7 +189,11 @@ public class PermissionAwareMiniMessage {
         public @NotNull TagResolver collectPermittedTags(@NotNull Player player) {
             List<TagResolver> tagResolvers = new ArrayList<>();
 
-            tagResolvers.add(instance().collectPermittedTags(player));
+            for (Map.Entry<String, TagResolver> entry : TAG_RESOLVERS_BY_PERMISSION.entrySet()) {
+                if (player.hasPermission(entry.getKey())) {
+                    tagResolvers.add(entry.getValue());
+                }
+            }
 
             for (Map.Entry<String, TagResolver> entry : LEGACY_TAG_RESOLVERS_BY_PERMISSION.entrySet()) {
                 if (player.hasPermission(entry.getKey())) {
